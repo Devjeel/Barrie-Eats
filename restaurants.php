@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<a href="restaurant.php">Add new Restaurants</a>
+
 <?php
 //connect
 $db = new PDO('mysql:host=localhost;dbname=barrieEats', 'root','jeelhp2015.');

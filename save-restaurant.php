@@ -11,23 +11,42 @@
 $name = $_POST['name'];
 $address = $_POST['address'];
 $phone = $_POST['phone'];
+$restaurantType = $_POST['restaurantType'];
 
+//Validate each input
+$OK = true;
 
-//connect to database with server, username,password, dbname
-$db = new PDO('mysql:host=localhost; dbname=barrieEats', 'root', 'jeelhp2015.');
+if(empty($name)) {
+    echo "Name is Required. <br />";
+    $OK = false;
+}
+if(empty($address)) {
+    echo "Address is Required <br />";
+    $OK = false;
+}
+if(empty($phone)) {
+    echo "Phone is Required <br />";
+    $OK = false;
+}
 
-// setup and execute an INSERT command
-$sql = "INSERT INTO restaurants (name, address, phone) VALUES(:name, :address, :phone)";
-$cmd = $db->prepare($sql);
-$cmd->bindParam(':name', $name, PDO::PARAM_STR, 60);
-$cmd->bindParam(':address', $address, PDO::PARAM_STR, 120);
-$cmd->bindParam(':phone',$phone, PDO::PARAM_STR, 15);
-$cmd->execute();
+if(OK){
+    //connect to database with server, username,password, dbname
+    $db = new PDO('mysql:host=localhost; dbname=barrieEats', 'root', 'jeelhp2015.');
 
-//disconnect
-$db = null;
+    // setup and execute an INSERT command
+    $sql = "INSERT INTO restaurants (name, address, phone, restaurantType) VALUES(:name, :address, :phone, :restaurantType)";
+    $cmd = $db->prepare($sql);
+    $cmd->bindParam(':name', $name, PDO::PARAM_STR, 60);
+    $cmd->bindParam(':address', $address, PDO::PARAM_STR, 120);
+    $cmd->bindParam(':phone',$phone, PDO::PARAM_STR, 15);
+    $cmd->bindParam('restaurantType',$restaurantType, PDO::PARAM_STR,60);
+    $cmd->execute();
 
-echo "restaurant saved!!"
+    //disconnect
+    $db = null;
+
+    echo "restaurant saved!!";
+}
 ?>
 
 </body>
