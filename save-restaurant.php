@@ -29,7 +29,13 @@ if(empty($phone)) {
     $OK = false;
 }
 
-if(OK){
+// Select restaurant type validation
+if($restaurantType == "-Select-"){
+    echo"Restaurant type is not selected<br />";
+    $OK = false;
+}
+
+if(OK == true){
     //connect to database with server, username,password, dbname
     $db = new PDO('mysql:host=localhost; dbname=barrieEats', 'root', 'jeelhp2015.');
 
@@ -39,7 +45,7 @@ if(OK){
     $cmd->bindParam(':name', $name, PDO::PARAM_STR, 60);
     $cmd->bindParam(':address', $address, PDO::PARAM_STR, 120);
     $cmd->bindParam(':phone',$phone, PDO::PARAM_STR, 15);
-    $cmd->bindParam('restaurantType',$restaurantType, PDO::PARAM_STR,60);
+    $cmd->bindParam(':restaurantType',$restaurantType, PDO::PARAM_STR,60);
     $cmd->execute();
 
     //disconnect

@@ -1,3 +1,19 @@
+<?php
+// If we have restaurant id, that means user is editing
+if (! empty($_GET['restaurantId'])){
+    $restaurantId = $_GET['restaurantId'];
+
+    //connect
+    $db = new PDO( 'mysql:host=localhost;dbname=barrieEats','root','jeelhp2015.');
+
+    //setup query and execute
+    $sql = "SELECT * FROM restaurants WHERE restaurantId = :restaurantId";
+    $cmd = $db->prepare($sql);
+    $cmd->bindParam(':restaurantsId', $restaurantId, PDO::PARAM_INT);
+    $cmd->execute();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,11 +43,12 @@
     <fieldset>
         <label for="restaurantType" class="col-md-1">Type: </label>
         <select name="restaurantsType" id="restaurantType">
+            <option>-select-</option>
             <?php
                 //connect to db
                 $db = new PDO( 'mysql:host=localhost;dbname=barrieEats','root','jeelhp2015.');
                 //set up query
-                $sql = "SELECT * FROM restaurantTypes ORDER BY ";
+                $sql = "SELECT * FROM restaurantTypes ORDER BY restaurantType";
 
                 $cmd = $db->prepare($sql);
                 // fetch the results
@@ -39,7 +56,7 @@
                 $types = $cmd->fetchAll();
                 // loop through and create a new option tag for each type
                 foreach ($types as $t) {
-                    echo "<option> {$t['restaurantType']} </option>";
+                    echo "<option>{$t['restaurantType']}</option>";
                 }
                 // disconnect
                 $db = null;
@@ -48,6 +65,7 @@
     </fieldset>
     <input type="submit" class="btn btn-primary col-md-offset-1">
 </form>
+
 
 </body>
 </html>
