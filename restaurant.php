@@ -1,4 +1,11 @@
 <?php
+//Initialize variables
+$name = null;
+$address = null;
+$phone = null;
+$restaurantType = null;
+$restaurantId = null;
+
 // If we have restaurant id, that means user is editing
 if (! empty($_GET['restaurantId'])){
     $restaurantId = $_GET['restaurantId'];
@@ -11,6 +18,16 @@ if (! empty($_GET['restaurantId'])){
     $cmd = $db->prepare($sql);
     $cmd->bindParam(':restaurantsId', $restaurantId, PDO::PARAM_INT);
     $cmd->execute();
+    $r = $cmd->fetch();
+
+    //store value in variable
+    $name = $r['name'];
+    $address = $r['address'];
+    $phone = $r['phone'];
+    $restaurantType = $r['restaurantType'];
+
+    //disconnect
+    $db = null;
 }
 ?>
 
@@ -30,15 +47,15 @@ if (! empty($_GET['restaurantId'])){
 <form method="post" action="save-restaurant.php">
     <fieldset>
         <label for="name" class="col-md-1">Name: </label>
-        <input name="name" id="name" required>
+        <input name="name" id="name"  value="<?php echo $name; ?>" required>
     </fieldset>
     <fieldset>
         <label for="address" class="col-md-1">Address: </label>
-        <textarea name="address" id="address" required> </textarea>
+        <textarea name="address" id="address" required><?php echo $address; ?></textarea>
     </fieldset>
     <fieldset>
         <label for="phone" class="col-md-1">phone: </label>
-        <input name="phone" id="phone" type="tel" required>
+        <input name="phone" id="phone" type="tel" value="<?php echo $phone; ?>" required>
     </fieldset>
     <fieldset>
         <label for="restaurantType" class="col-md-1">Type: </label>
@@ -56,7 +73,12 @@ if (! empty($_GET['restaurantId'])){
                 $types = $cmd->fetchAll();
                 // loop through and create a new option tag for each type
                 foreach ($types as $t) {
-                    echo "<option>{$t['restaurantType']}</option>";
+                    if($t['restaurantType'] == $restaurantType){
+                        echo "<option selected>{$t['restaurantType']}</option>";
+                    }
+                    else {
+                        echo "<option>{$t['restaurantType']}</option>";
+                    }
                 }
                 // disconnect
                 $db = null;
@@ -64,6 +86,7 @@ if (! empty($_GET['restaurantId'])){
         </select>
     </fieldset>
     <input type="submit" class="btn btn-primary col-md-offset-1">
+    <input type="hidden" id="restaurantId" name="restaurantId" value="<?php echo $restaurantId; ?>">
 </form>
 
 
