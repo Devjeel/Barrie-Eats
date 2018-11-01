@@ -7,12 +7,19 @@
 <body>
 
 <?php
+// auth check
+session_start();
+if (empty($_SESSION['userId'])) {
+    header('location:login.php');
+    exit();
+}
+
 // introduce variables and save values
 $name = $_POST['name'];
 $address = $_POST['address'];
 $phone = $_POST['phone'];
 $restaurantType = $_POST['restaurantType'];
-$restaurantId = null;
+$restaurantId = $_POST['restaurantId'];
 
 //Validate each input
 $OK = true;

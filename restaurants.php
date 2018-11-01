@@ -7,7 +7,14 @@
 </head>
 <body>
 
-<a href="restaurant.php">Add new Restaurants</a>
+<?php
+// access the current session
+session_start();
+if (isset($_SESSION['userId'])) {
+    echo '<a href="restaurant.php">Add a New Restaurant</a> ';
+    echo '<a href="logout.php">Logout</a>';
+}
+?>
 
 <h1>View all restaurants</h1>
 
@@ -24,17 +31,26 @@ $cmd->execute();
 $restaurants = $cmd->fetchAll();
 
 //start the table
-echo '<table class="table table-bordered table-striped text-center"><thead><th>Name</th><th>Address</th><th>Phone</th><th>Restaurant Type</th><th>Actions</th></thead><tbody>';
+echo '<table class="table table-bordered table-striped text-center"><thead><th>Name</th><th>Address</th><th>Phone</th><th>Restaurant Type</th>';
+
+if (isset($_SESSION['userId'])) {
+    echo '<th>Actions</th>';
+}
+echo'</thead><tbody>';
 
 //loop the data & show each restaurants
 foreach($restaurants as $r){
     echo"<tr><td>{$r['name']}</td>
              <td>{$r['address']}</td>
              <td>{$r['phone']}</td>
-             <td>{$r['restaurantType']}</td>
-             <td><a href=\'restaurant.php?restaurantId={$r['restaurantId']}\'>Edit</a></td>
-             <td><a href=\"delete-restaurants.php?restaurantId={$r['restaurantId']}\"
+             <td>{$r['restaurantType']}</td>";
+
+    if (isset($_SESSION['userId'])) {
+        echo "<td><a href=\"restaurant.php?restaurantId={$r['restaurantId']}\"
+                    class=\"btn btn-info btn-sm\">Edit</a>
+             <a href=\"delete-restaurants.php?restaurantId={$r['restaurantId']}\"
                     class=\"btn btn-danger btn-sm confirmation\">Delete</a></td></tr>";
+    }
 }
 
 //close the table

@@ -1,4 +1,11 @@
 <?php
+// auth check
+session_start();
+if (empty($_SESSION['userId'])) {
+    header('location:login.php');
+    exit();
+}
+
 //Initialize variables
 $name = null;
 $address = null;
@@ -16,7 +23,7 @@ if (! empty($_GET['restaurantId'])){
     //setup query and execute
     $sql = "SELECT * FROM restaurants WHERE restaurantId = :restaurantId";
     $cmd = $db->prepare($sql);
-    $cmd->bindParam(':restaurantsId', $restaurantId, PDO::PARAM_INT);
+    $cmd->bindParam(':restaurantId', $restaurantId, PDO::PARAM_INT);
     $cmd->execute();
     $r = $cmd->fetch();
 
@@ -41,7 +48,7 @@ if (! empty($_GET['restaurantId'])){
 <body>
 
 <a href="restaurants.php">View Restaurants</a>
-
+<a href="logout.php">Logout</a>
 <h1>Restaurant Details</h1>
 
 <form method="post" action="save-restaurant.php">
